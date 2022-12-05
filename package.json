@@ -1,0 +1,25 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "author": "",
+  "type": "commonjs",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "1.1.3",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
+    "mongodb": "^4.12.1",
+    "nodemon": "2.0.20",
+    "request": "^2.88.2",
+    "telegraf": "github:telegraf/telegraf#feat-better-session",
+    "telegraf-session-mongoose": "2.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.20"
+  }
+}
