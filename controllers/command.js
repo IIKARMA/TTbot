@@ -8,7 +8,7 @@ const start = (ctx) =>
 		parse_mode: "HTML",
 		...mainMenu,
 	});
-const backMain = (ctx) =>
+const backMain = async (ctx) =>
 	ctx.reply({
 		disable_web_page_preview: true,
 		parse_mode: "HTML",

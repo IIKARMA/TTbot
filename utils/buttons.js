@@ -5,11 +5,14 @@ const { CMD_TEXT } = require("../config/constants");
 const mainMenu = Markup.keyboard([
 	[CMD_TEXT.video, CMD_TEXT.info],
 	[CMD_TEXT.tags, CMD_TEXT.balance],
-	[Markup.button.text(CMD_TEXT.profile)],
+	[CMD_TEXT.profile],
 ]).resize();
+const goVideo = Markup.inlineKeyboard([
+	Markup.button.url("Перейти", "https://t.me/+QdC3HMutxt5kY2E6"),
+]);
 
 const backMenuButton = Markup.keyboard([[CMD_TEXT.menu]]).resize();
-module.exports = {
-	mainMenu,
-	backMenuButton,
-};
+const calculButton = Markup.keyboard([["Калькулятор"], [CMD_TEXT.menu]])
+	.oneTime()
+	.resize();
+module.exports = { goVideo, mainMenu, backMenuButton, calculButton };
