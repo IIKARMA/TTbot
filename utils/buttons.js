@@ -7,7 +7,7 @@ const mainMenu = Markup.keyboard([
 	[CMD_TEXT.tags, CMD_TEXT.balance],
 	[CMD_TEXT.profile],
 ]).resize();
-const goVideo = Markup.inlineKeyboard([
+const goVideo = Markup.inlineKeyboard("sd", [
 	Markup.button.url("Перейти", "https://t.me/+QdC3HMutxt5kY2E6"),
 ]);
 

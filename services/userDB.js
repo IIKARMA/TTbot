@@ -1,5 +1,5 @@
 // Get users list
-async function getUsers(id) {
+async function getUsers(id, type) {
 	let request = require("request");
 	const axios = require("axios");
 
@@ -11,7 +11,7 @@ async function getUsers(id) {
 			"x-apikey": process.env.DB_TOKEN,
 		},
 	};
-
+	console.log(id);
 	let data = await axios
 		.request(options)
 		.then((response) => {
@@ -20,21 +20,26 @@ async function getUsers(id) {
 		.catch(function (error) {
 			console.error(error);
 		});
-	const stats = data[0] && JSON.parse(data[0].stat);
+	const stats = data[0] && data[0].stat;
 
+	console.log(data);
 	data = data.filter((user) => user.chatId === id);
-	// console.log(data);
-	if (data.length !== 0) {
+	if (data.length > 0) {
 		const { followerCount, videoCount, heart } = stats;
-		return `🏠 Особистий кабінет   \n\n<b>Ваш ID:</b> ${data[0]?.chatId}\n<b>TikTok</b>: ${data[0]?.uniqueId}\n<b>Баланс</b>: ${data[0]?.balance}\n<b>К-сть фоловерів: ${followerCount}</b>\n<b>К-сть відео:</b> ${videoCount} \n<b>К-сть лайків:</b>${heart}`;
+		return type !== "views"
+			? `🏠 Особистий кабінет   \n\n<b>Ваш ID:</b> ${data[0]?.chatId}\n<b>TikTok</b>: ${data[0]?.uniqueId}\n<b>Баланс</b>: ${data[0]?.balance} грн.\n<b>К-сть фоловерів: ${followerCount}</b>\n<b>К-сть відео:</b> ${videoCount} \n<b>К-сть лайків:</b>${heart}`
+			: data[0]?.balance;
 	} else return undefined;
 }
-
+async function getCountViews(chatId, type) {
+	let request = require("request");
+	const axios = require("axios");
+	const user = await getUsers(id, "views");
+}
 // Added user in db
-async function setUser({ chatId, user, stats }) {
+async function setUser({ chatId, balance, user, stats }) {
 	let request = require("request");
 
-	console.log(stats);
 	var options = {
 		method: "POST",
 		url: process.env.DB,
@@ -44,10 +49,12 @@ async function setUser({ chatId, user, stats }) {
 			"content-type": "application/json",
 		},
 		body: {
+			idTT: user.id,
 			chatId: chatId,
 			uniqueId: user.uniqueId,
-			balance: "0.00",
-			stat: JSON.stringify(stats),
+			balance: balance ? balance : "0.00",
+			stat: stats,
+			secUid: user.secUid,
 		},
 		json: true,
 	};

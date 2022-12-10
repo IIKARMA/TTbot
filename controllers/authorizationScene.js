@@ -4,7 +4,7 @@ const { Markup } = require("telegraf");
 const { regExper } = require("../utils/regExp");
 const { CMD_TEXT } = require("../config/constants");
 const { backMain, startMenuScene } = require("./command");
-const { getUserTT } = require("../services/getUserTT");
+const { getUserTT, getUserVideoInfo } = require("../services/getUserTT");
 const { setUser, getUsers } = require("../services/userDB");
 const authorizationScene = new Scenes.BaseScene("authorization");
 
@@ -18,18 +18,26 @@ authorizationScene.hears(
 			this.username = ctx.match.groups.nick.toString();
 
 			const data = await getUserTT(this.username);
+			const bal = await getUserVideoInfo(this.username);
 
-			await setUser({
-				chatId: this.chatId,
-				user: data.data.user,
-				stats: data.data.stats,
-			});
+			if (data.followers >= 1000) {
+				await setUser({
+					chatId: this.chatId,
+					user: { uniqueId: data.username, id: data.user_id },
+					balance: bal,
+					stats: {
+						followerCount: data.followers,
+						videoCount: data.total_videos,
+						heart: data.total_heart,
+					},
+				});
 
-			ctx.reply(CMD_TEXT.requestTrue, { ...backMenuButton });
+				ctx.reply(CMD_TEXT.requestTrue, { ...backMenuButton });
+			} else ctx.reply(CMD_TEXT.followerFeil);
 		} catch (error) {
 			ctx.reply(CMD_TEXT.error);
 		}
-	}
+	},
 );
 authorizationScene.hears(/\w+/g, (ctx) => {
 	ctx.reply(CMD_TEXT.getLink);

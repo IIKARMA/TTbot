@@ -2,7 +2,6 @@ const { Telegraf, session } = require("telegraf");
 const { Scenes } = require("telegraf");
 const { CMD_TEXT } = require("./config/constants");
 const {
-	start,
 	backMain,
 	startAuthScene,
 	startMenuScene,
@@ -21,8 +20,12 @@ const setupBot = () => {
 		next();
 	});
 	bot.command("start", async (ctx) => {
-		let user = await getUsers(ctx.from.id);
-		return user !== undefined ? startMenuScene(ctx) : startAuthScene(ctx);
+		try {
+			let user = await getUsers(ctx.from.id, "auth");
+
+			console.log("user", user);
+			user !== undefined ? startMenuScene(ctx) : startAuthScene(ctx);
+		} catch (error) {}
 	});
 
 	return bot;

@@ -4,10 +4,11 @@ const { setupBot } = require("./bot");
 
 function setup() {
 	try {
-		setupBot().launch();
+		return setupBot().launch();
 		console.log("</ Бот успешно запущен >");
 	} catch (error) {
 		console.log(error);
 	}
+	setup();
 }
 setup();
